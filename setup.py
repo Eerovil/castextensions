@@ -7,7 +7,7 @@ setup(
     name="Cast Extensions",
     version="0.1",
     license="MIT",
-    url="https://github.com/Eerovil/cast-extensions.git",
+    url="https://github.com/Eerovil/castextensions.git",
     author="Eero Vilpponen",
     author_email="eero@vilpponen.fi",
     description="Cast Extensions",
