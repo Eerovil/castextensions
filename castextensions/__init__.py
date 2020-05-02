@@ -5,6 +5,8 @@ from .dlna import find_dlna
 from .yleareena import YleAreena
 from .netflix import Netflix
 
+from .utils.chromecast import Chromecast
+
 
 def quick_play(cast, app_name, data):
     """
@@ -57,6 +59,7 @@ def quick_play(cast, app_name, data):
             'media_url': url,
         }
     elif app_name == 'netflix':
+        cast = Chromecast(cast)
         if cast.running_app == "netflix":
             # TODO: Async needed here. If netflix is running, it needs to be stopped. But
             # chromecast is really slow to first stop an app, then start another one (takes up to
