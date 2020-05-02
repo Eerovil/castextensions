@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 
-long_description = open("README.rst").read()
+long_description = open("README.md").read()
 
 setup(
     name="Cast Extensions",
@@ -16,7 +16,7 @@ setup(
     zip_safe=False,
     include_package_data=True,
     platforms="any",
-    install_requires=list(val.strip() for val in open("pip-requirements-adb.txt")),
+    install_requires=list(val.strip() for val in open("pip-requirements.txt")),
     classifiers=[
         "Intended Audience :: Developers",
         "License :: OSI Approved :: MIT License",

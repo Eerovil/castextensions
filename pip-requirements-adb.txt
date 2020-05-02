@@ -1,3 +1,0 @@
--r pip-requirements.txt
-
-androidviewclient==20.0.0b3
