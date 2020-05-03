@@ -15,7 +15,7 @@ def quick_play(cast, app_name, data):
         vol.Required('data'): vol.Schema({
             vol.Required("media_id"): cv.string,
             vol.Optional("media_type"): cv.string,
-            vol.Optional("enqueue", default=False): cv.boolean,
+            vol.Optional("enqueue"): cv.boolean,
             vol.Optional("index"): cv.string,
             vol.Optional("extra1"): cv.string,
             vol.Optional("extra2"): cv.string,
@@ -23,6 +23,7 @@ def quick_play(cast, app_name, data):
     }
     """
     from pychromecast.controllers.media import MediaController
+    from pychromecast.controllers.yleareena import YleAreenaController
 
     try:
         with open('../config.json', 'r') as f:
@@ -44,20 +45,22 @@ def quick_play(cast, app_name, data):
             'content_type': data.pop('media_type', None),
         }
     elif app_name == 'yleareena':
-        areena = YleAreena(config["areena_key"])
-        media_id = data.pop('media_id')
+        program_id = data.pop('media_id')
         index = data.pop('index', None)
         if data.pop('media_type', None) == 'series':
+            areena = YleAreena(config["areena_key"])
             if index == "random":
-                url = areena.get_series_url_random(media_id)
+                program_id = areena.get_series_random_id(program_id)
             else:
-                url = areena.get_series_url_latest(media_id)
-        else:
-            url = areena.get_program_url(media_id)
-        controller = MediaController()
+                program_id = areena.get_series_latest_id(program_id)
+        kaltura_id = YleAreena.get_kaltura_id(program_id)
+        controller = YleAreenaController()
         kwargs = {
-            'media_url': url,
+            'kaltura_id': kaltura_id,
+            'audio_language': data.pop('extra1', ''),
+            'text_language': data.pop('extra2', 'off'),
         }
+    # *** Start Special apps not using pychromecast ***
     elif app_name == 'netflix':
         cast = Chromecast(cast)
         if cast.running_app == "netflix":
@@ -78,6 +81,7 @@ def quick_play(cast, app_name, data):
         except Exception:
             traceback.print_exc()
             cast.quit()
+    # *** End Special apps not using pychromecast ***
     else:
         raise NotImplementedError()
 
