@@ -49,6 +49,8 @@ Supla is extended to support programs. Previously only single episodes could be 
 
 Example config to play the latest `aamulypsy` episode containing `Koko Shitti` in the title.
 
+The media_id for suomipop should be 2278513 currently.
+
 ```yaml
 'cast_supla_to_my_chromecast':
   alias: Cast supla to My Chromecast
