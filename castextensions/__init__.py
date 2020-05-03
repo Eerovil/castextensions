@@ -66,12 +66,12 @@ def quick_play(cast, app_name, data):
         media_id = data.pop('media_id')
 
         if data.pop('media_type', None) == 'program':
-            media_id = find_supla_program(media_id, match=data.pop('extra1', None))
+            media_id = find_supla_program(media_id, match=data.pop('extra2', None))
 
         controller = SuplaController()
         kwargs = {
             'media_id': media_id,
-            'is_live': data.pop('extra2', None),
+            'is_live': data.pop('extra1', None),
         }
 
     # *** Start Special apps not using pychromecast ***
