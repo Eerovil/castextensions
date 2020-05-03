@@ -29,8 +29,9 @@ Optional. Yle Areena API key to fetch series episodes. Not needed for single epi
 
 | app_name | media_id | media_type | enqueue | index | extra1 | extra2 |
 |----------|----------|------------|---------|-------|--------|--------|
+| youtube | Video ID * | | true/false | | Playlist ID | |
 | netflix | Full URL to title (Should prompt to open Netflix on Android) * | | | | | |
-| supla | Audio ID / Program name * | "program" | | | *title regex* | |
+| supla | Audio ID / Program name * | "program" | | | *is_livestream* (true/false) | *title regex* |
 | dlna | Media item title regex * | *content_type* | | *integer* / "random" | DLNA server ip:port * | |
 | yleareena | Areena program / series ID * | "random" | | "random" | | |
 
