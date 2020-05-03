@@ -4,6 +4,7 @@ import json
 from .dlna import find_dlna
 from .yleareena import YleAreena
 from .netflix import Netflix
+from .supla import find_supla_program
 
 from .utils.chromecast import Chromecast
 
@@ -24,6 +25,7 @@ def quick_play(cast, app_name, data):
     """
     from pychromecast.controllers.media import MediaController
     from pychromecast.controllers.yleareena import YleAreenaController
+    from pychromecast.controllers.supla import SuplaController
 
     try:
         with open('../config.json', 'r') as f:
@@ -60,6 +62,18 @@ def quick_play(cast, app_name, data):
             'audio_language': data.pop('extra1', ''),
             'text_language': data.pop('extra2', 'off'),
         }
+    elif app_name == 'supla':
+        media_id = data.pop('media_id')
+
+        if data.pop('media_type', None) == 'program':
+            media_id = find_supla_program(media_id, match=data.pop('extra1', None))
+
+        controller = SuplaController()
+        kwargs = {
+            'media_id': media_id,
+            'is_live': data.pop('extra2', None),
+        }
+
     # *** Start Special apps not using pychromecast ***
     elif app_name == 'netflix':
         cast = Chromecast(cast)
