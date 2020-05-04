@@ -42,7 +42,7 @@ def quick_play(cast, app_name, data):
     if app_name == 'dlna':
         controller = MediaController()
         kwargs = {
-            'media_url': find_dlna(data.pop('extra1'), data.pop('media_id'),
+            'media_url': find_dlna(data.pop('dlna_server'), data.pop('media_id'),
                                    index=data.pop('index', None)),
             'content_type': data.pop('media_type', None),
         }
@@ -59,19 +59,19 @@ def quick_play(cast, app_name, data):
         controller = YleAreenaController()
         kwargs = {
             'kaltura_id': kaltura_id,
-            'audio_language': data.pop('extra1', ''),
-            'text_language': data.pop('extra2', 'off'),
+            'audio_language': data.pop('audio_lang', ''),
+            'text_language': data.pop('text_lang', 'off'),
         }
     elif app_name == 'supla':
         media_id = data.pop('media_id')
 
         if data.pop('media_type', None) == 'program':
-            media_id = find_supla_program(media_id, match=data.pop('extra2', None))
+            media_id = find_supla_program(media_id, match=data.pop('title_match', None))
 
         controller = SuplaController()
         kwargs = {
             'media_id': media_id,
-            'is_live': data.pop('extra1', None),
+            'is_live': data.pop('is_live', None),
         }
 
     # *** Start Special apps not using pychromecast ***
