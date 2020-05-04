@@ -1,4 +1,6 @@
 import traceback
+import os
+import appdirs
 import json
 
 from .dlna import find_dlna
@@ -7,6 +9,9 @@ from .netflix import Netflix
 from .supla import find_supla_program
 
 from .utils.chromecast import Chromecast
+
+import logging
+logger = logging.getLogger(__name__)
 
 
 def quick_play(cast, app_name, data):
@@ -27,15 +32,23 @@ def quick_play(cast, app_name, data):
     from pychromecast.controllers.yleareena import YleAreenaController
     from pychromecast.controllers.supla import SuplaController
 
+    user_config_path = os.path.join(appdirs.user_config_dir(), 'castextensions.json')
+
     try:
-        with open('../config.json', 'r') as f:
+        with open(user_config_path, 'r') as f:
             config = json.load(f)
     except FileNotFoundError:
-        with open('../config.json', 'w') as f:
+        try:
+            os.mkdir(appdirs.user_config_dir())
+        except FileExistsError:
+            pass
+        with open(user_config_path, 'w') as f:
             f.write(json.dumps({
                 "areena_key": "",
                 "adb_connect": "",
             }, indent=4))
+        logger.error("No user settings file! Modify the example settings created (path: %s)",
+                     user_config_path)
 
     kwargs = {}
 
