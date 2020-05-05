@@ -11,7 +11,7 @@ pip install https://github.com/Eerovil/castextensions/archive/master.zip
 
 # Configuration
 
-`config.json` contains the configuration. Example config:
+`~/.config/castextensions.json` contains the configuration. Example config:
 ```
 "connect_ip": "192.168.100.3",
 "areena_key": "*areena-api-keys*"
@@ -40,13 +40,13 @@ media_id must be of the format `https://www.netflix.com/title/{id}`
   sequence:
   - data:
       entity_id: media_player.my_chromecast
-      media_type: cast
-      media_id: >
+      media_content_type: cast
+      media_id: '
         {
           "app_name": "netflix",
-          "media_id": "https://www.netflix.com/title/60034572",
-        }
-    service: cast.cast_app
+          "media_id": "https://www.netflix.com/title/60034572"
+        }'
+    service: media_player.play_media
 ```
 
 ## Supla
@@ -70,14 +70,14 @@ Optional:
   sequence:
   - data:
       entity_id: media_player.my_chromecast
-      media_type: cast
-      media_id: >
+      media_content_type: cast
+      media_id: '
         {
           "app_name": "supla",
           "media_id": "aamulypsy",
-          "title_match": "Koko Shitti",
-        }
-    service: cast.cast_app
+          "title_match": "Koko Shitti"
+        }'
+    service: media_player.play_media
 ```
 
 ## DLNA
@@ -98,15 +98,15 @@ Optional:
   sequence:
   - data:
       entity_id: media_player.my_chromecast
-      media_type: cast
-      media_id: >
+      media_content_type: cast
+      media_id: '
         {
           "app_name": "dlna",
           "media_id": "Friends",
           "index": "random",
-          "dlna_server": "192.168.100.2:1337",
-        }
-    service: cast.cast_app
+          "dlna_server": "192.168.100.2:1337"
+        }'
+    service: media_player.play_media
 
 ## Yle Areena
 
@@ -125,10 +125,10 @@ Optional:
   sequence:
   - data:
       entity_id: media_player.my_chromecast
-      media_type: cast
-      media_id: >
+      media_content_type: cast
+      media_id: '
         {
           "app_name": "yleareena",
-          "media_id": "1-3260345",
-        }
-    service: cast.cast_app
+          "media_id": "1-3260345"
+        }'
+    service: media_player.play_media
