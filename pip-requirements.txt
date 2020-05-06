@@ -1,6 +1,0 @@
-pychromecast
-upnpclient
-androidviewclient==20.0.0b3
-yle-dl
-BeautifulSoup4
-appdirs

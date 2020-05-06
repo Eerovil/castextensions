@@ -6,7 +6,7 @@ Home Assistant Extensions to cast to Chromecast programmatically using lots of d
 # Installation
 
 ```
-pip install https://github.com/Eerovil/castextensions/archive/master.zip
+Download `custom_components/cast_extension` to your `custom_components` directory, and enable the integration in Home Assistant.
 ```
 
 # Configuration
