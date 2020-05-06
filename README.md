@@ -13,8 +13,9 @@ Download `custom_components/cast_extension` to your `custom_components` director
 
 When the integration is enabled, there is a dialog asking for configuration. These are the keys, in order:
 ```
-"connect_ip": "192.168.100.3",
-"areena_key": "*areena-api-keys*"
+cast_extensions:
+  connect_ip: 192.168.100.3
+  areena_key: *areena-api-keys*
 ```
 
 ## connect_ip

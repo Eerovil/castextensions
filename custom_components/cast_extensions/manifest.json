@@ -1,17 +1,15 @@
 {
     "domain": "cast_extensions",
     "name": "Google Cast Extensions",
-    "config_flow": true,
-    "documentation": "https://www.home-assistant.io/integrations/cast-extensions",
+    "config_flow": false,
+    "documentation": "https://github.com/Eerovil/castextensions",
     "requirements": [
-        "pychromecast==5.0.0",
+        "pychromecast>=5.0.0",
         "upnpclient",
         "androidviewclient==20.0.0b3",
         "yle-dl",
-        "BeautifulSoup4",
-        "appdirs"
+        "BeautifulSoup4"
     ],
-    "after_dependencies": ["cloud"],
-    "zeroconf": ["_googlecast._tcp.local."],
+    "dependencies": ["cast"],
     "codeowners": ["@Eerovil"]
 }

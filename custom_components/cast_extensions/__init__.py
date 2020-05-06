@@ -25,11 +25,6 @@ _LOGGER = logging.getLogger(__name__)
 
 
 async def async_setup(hass, config):
-    return True
-
-
-async def async_setup_entry(hass, config_entry: config_entries.ConfigEntry):
-    """Set up Cast from a config entry."""
 
     async def async_quick_play(call: ServiceCallType):
         registry = await entity_registry.async_get_registry(hass)
@@ -45,7 +40,7 @@ async def async_setup_entry(hass, config_entry: config_entries.ConfigEntry):
         app_data = json.loads(call.data["media_content_id"])
         app_name = app_data.pop('app_name')
 
-        quick_play(hass, entity, app_name, app_data, config=config_entry)
+        quick_play(hass, entity, app_name, app_data, config=config)
 
     hass.helpers.service.async_register_admin_service(
         DOMAIN,
@@ -56,7 +51,8 @@ async def async_setup_entry(hass, config_entry: config_entries.ConfigEntry):
     return True
 
 
-def quick_play(hass, entity, app_name, data, config: config_entries.ConfigEntry):
+def quick_play(hass, entity, app_name, data, config):
+    _LOGGER.error(config['cast_extensions'])
     service_data = {}
 
     cast_wrapper = ChromecastWrapper(hass, entity)
@@ -75,7 +71,7 @@ def quick_play(hass, entity, app_name, data, config: config_entries.ConfigEntry)
         program_id = data.pop('media_id')
         index = data.pop('index', None)
         if data.pop('media_type', None) == 'series':
-            areena = YleAreena((config.data["areena_key"]))
+            areena = YleAreena((config['cast_extensions']["areena_key"]))
             if index == "random":
                 program_id = areena.get_series_random_id(program_id)
             else:
@@ -103,7 +99,7 @@ def quick_play(hass, entity, app_name, data, config: config_entries.ConfigEntry)
         cast_wrapper.start_app("netflix")
         try:
             netflix = Netflix(
-                entity.original_name, connect_ip=config.data.get("adb_connect", None)
+                entity.original_name, connect_ip=config['cast_extensions'].get("adb_connect", None)
             )
             netflix.main(data.pop('media_id'))
         except Exception:
