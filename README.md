@@ -11,7 +11,7 @@ pip install https://github.com/Eerovil/castextensions/archive/master.zip
 
 # Configuration
 
-`~/.config/castextensions.json` contains the configuration. Example config:
+When the integration is enabled, there is a dialog asking for configuration. These are the keys, in order:
 ```
 "connect_ip": "192.168.100.3",
 "areena_key": "*areena-api-keys*"
@@ -41,7 +41,7 @@ media_id must be of the format `https://www.netflix.com/title/{id}`
   - data:
       entity_id: media_player.my_chromecast
       media_content_type: cast
-      media_id: '
+      media_content_id: '
         {
           "app_name": "netflix",
           "media_id": "https://www.netflix.com/title/60034572"
@@ -71,7 +71,7 @@ Optional:
   - data:
       entity_id: media_player.my_chromecast
       media_content_type: cast
-      media_id: '
+      media_content_id: '
         {
           "app_name": "supla",
           "media_id": "aamulypsy",
@@ -99,7 +99,7 @@ Optional:
   - data:
       entity_id: media_player.my_chromecast
       media_content_type: cast
-      media_id: '
+      media_content_id: '
         {
           "app_name": "dlna",
           "media_id": "Friends",
@@ -126,7 +126,7 @@ Optional:
   - data:
       entity_id: media_player.my_chromecast
       media_content_type: cast
-      media_id: '
+      media_content_id: '
         {
           "app_name": "yleareena",
           "media_id": "1-3260345"
