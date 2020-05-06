@@ -4,7 +4,6 @@ import traceback
 import json
 import logging
 
-from homeassistant import config_entries
 import homeassistant.helpers.config_validation as cv
 from homeassistant.components.media_player.const import SERVICE_PLAY_MEDIA
 from homeassistant.components.media_player import MEDIA_PLAYER_PLAY_MEDIA_SCHEMA
@@ -40,7 +39,14 @@ async def async_setup(hass, config):
         app_data = json.loads(call.data["media_content_id"])
         app_name = app_data.pop('app_name')
 
-        quick_play(hass, entity, app_name, app_data, config=config)
+        await hass.async_add_executor_job(
+            quick_play,
+            hass,
+            entity,
+            app_name,
+            app_data,
+            config
+        )
 
     hass.helpers.service.async_register_admin_service(
         DOMAIN,
@@ -52,7 +58,6 @@ async def async_setup(hass, config):
 
 
 def quick_play(hass, entity, app_name, data, config):
-    _LOGGER.error(config['cast_extensions'])
     service_data = {}
 
     cast_wrapper = ChromecastWrapper(hass, entity)
