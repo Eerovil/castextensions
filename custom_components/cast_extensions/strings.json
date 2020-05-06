@@ -1,0 +1,15 @@
+{
+    "title": "Cast Extensions",
+    "config": {
+        "step": {
+            "user": {
+                "description": "Configure applications",
+                "title": "Configure applications",
+                "data": {
+                    "adb_connect": "Adb device ip for remote connection",
+                    "yleareena_key": "Yle Areena API key for fetching series data"
+                }
+            }
+        }
+    }
+}

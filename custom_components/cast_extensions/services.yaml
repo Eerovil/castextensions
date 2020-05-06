@@ -1,0 +1,13 @@
+
+play_media:
+  description: Send the media player the command for playing media.
+  fields:
+    entity_id:
+      description: Name(s) of entities to seek media on
+      example: "media_player.living_room_chromecast"
+    media_content_id:
+      description: The ID of the content to play. Platform dependent.
+      example: "https://home-assistant.io/images/cast/splash.png"
+    media_content_type:
+      description: The type of the content to play. Must be one of image, music, tvshow, video, episode, channel or playlist
+      example: "music"

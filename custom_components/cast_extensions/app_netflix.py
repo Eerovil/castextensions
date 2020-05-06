@@ -1,6 +1,6 @@
 import re
 
-from .utils.androidviewclient import AndroidViewBase, loop_until
+from .util_androidviewclient import AndroidViewBase, loop_until
 
 
 class Netflix(AndroidViewBase):

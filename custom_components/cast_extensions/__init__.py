@@ -1,56 +1,76 @@
+"""Component to add new Cast Applications support."""
+
 import traceback
 import os
 import appdirs
 import json
-
-from .dlna import find_dlna
-from .yleareena import YleAreena
-from .netflix import Netflix
-from .supla import find_supla_program
-
-from .utils.chromecast import Chromecast
-
 import logging
-logger = logging.getLogger(__name__)
+import functools as ft
+from pychromecast import get_chromecasts
+
+from homeassistant import config_entries
+import homeassistant.helpers.config_validation as cv
+from homeassistant.components.media_player.const import SERVICE_PLAY_MEDIA
+from homeassistant.components.media_player import MEDIA_PLAYER_PLAY_MEDIA_SCHEMA
+from homeassistant.helpers.typing import ServiceCallType
+from homeassistant.helpers import entity_registry
+
+from .const import DOMAIN
+
+from .app_dlna import find_dlna
+from .app_yleareena import YleAreena
+from .app_netflix import Netflix
+from .app_supla import find_supla_program
+
+from .util_chromecast import Chromecast
 
 
-def quick_play(cast, app_name, data):
-    """
-    CAST_APP_SCHEMA = {
-        vol.Required('app_name', default=""): cv.string,
-        vol.Required('data'): vol.Schema({
-            vol.Required("media_id"): cv.string,
-            vol.Optional("media_type"): cv.string,
-            vol.Optional("enqueue"): cv.boolean,
-            vol.Optional("index"): cv.string,
-            vol.Optional("extra1"): cv.string,
-            vol.Optional("extra2"): cv.string,
-        }),
-    }
-    """
+_LOGGER = logging.getLogger(__name__)
+
+
+async def async_setup(hass, config):
+    return True
+
+
+async def async_setup_entry(hass, config_entry: config_entries.ConfigEntry):
+    """Set up Cast from a config entry."""
+
+    async def async_quick_play(call: ServiceCallType):
+        registry = await entity_registry.async_get_registry(hass)
+
+        for entry in registry.entities.values():
+            if entry.entity_id == call.data["entity_id"][0]:
+                chromecast_name = entry.original_name
+                break
+        else:
+            _LOGGER.error('Entity %s not found', call.data["entity_id"][0])
+            return
+
+        app_data = json.loads(call.data["media_content_id"])
+        app_name = app_data.pop('app_name')
+
+        await hass.async_add_job(
+            ft.partial(quick_play, chromecast_name, app_name, app_data, config=config_entry)
+        )
+
+    hass.helpers.service.async_register_admin_service(
+        DOMAIN,
+        SERVICE_PLAY_MEDIA,
+        async_quick_play,
+        cv.make_entity_service_schema(MEDIA_PLAYER_PLAY_MEDIA_SCHEMA),
+    )
+    return True
+
+
+def quick_play(chromecast_name, app_name, data, config: config_entries.ConfigEntry):
+
     from pychromecast.controllers.media import MediaController
     from pychromecast.controllers.yleareena import YleAreenaController
     from pychromecast.controllers.supla import SuplaController
 
-    user_config_path = os.path.join(appdirs.user_config_dir(), 'castextensions.json')
-
-    try:
-        with open(user_config_path, 'r') as f:
-            config = json.load(f)
-    except FileNotFoundError:
-        try:
-            os.mkdir(appdirs.user_config_dir())
-        except FileExistsError:
-            pass
-        with open(user_config_path, 'w') as f:
-            f.write(json.dumps({
-                "areena_key": "",
-                "adb_connect": "",
-            }, indent=4))
-        logger.error("No user settings file! Modify the example settings created (path: %s)",
-                     user_config_path)
-
     kwargs = {}
+
+    cast = Chromecast([cast for cast in get_chromecasts() if cast.device.friendly_name == chromecast_name][0])
 
     if app_name == 'dlna':
         controller = MediaController()
@@ -63,7 +83,7 @@ def quick_play(cast, app_name, data):
         program_id = data.pop('media_id')
         index = data.pop('index', None)
         if data.pop('media_type', None) == 'series':
-            areena = YleAreena(config["areena_key"])
+            areena = YleAreena((config.data["areena_key"]))
             if index == "random":
                 program_id = areena.get_series_random_id(program_id)
             else:
@@ -89,7 +109,6 @@ def quick_play(cast, app_name, data):
 
     # *** Start Special apps not using pychromecast ***
     elif app_name == 'netflix':
-        cast = Chromecast(cast)
         if cast.running_app == "netflix":
             # TODO: Async needed here. If netflix is running, it needs to be stopped. But
             # chromecast is really slow to first stop an app, then start another one (takes up to
@@ -102,7 +121,7 @@ def quick_play(cast, app_name, data):
             cast.start_app("netflix")
         try:
             netflix = Netflix(
-                cast.get_name(), connect_ip=config.get("adb_connect", None)
+                cast.get_name(), connect_ip=config.data.get("adb_connect", None)
             )
             netflix.main(data.pop('media_id'))
         except Exception:
@@ -113,7 +132,6 @@ def quick_play(cast, app_name, data):
         raise NotImplementedError()
 
     if kwargs:
-        cast.wait()
         cast.register_handler(controller)
         controller.quick_play(**kwargs)
 
