@@ -108,6 +108,7 @@ Optional:
           "dlna_server": "192.168.100.2:1337"
         }'
     service: media_player.play_media
+```
 
 ## Yle Areena
 
@@ -133,3 +134,4 @@ Optional:
           "media_id": "1-3260345"
         }'
     service: media_player.play_media
+```
