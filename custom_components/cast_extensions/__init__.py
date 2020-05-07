@@ -100,7 +100,7 @@ def quick_play(hass, entity, app_name, data, config):
 
     # *** Start Special apps not using pychromecast ***
     elif app_name == 'netflix':
-        cast_wrapper.quit()
+        cast_wrapper.stop()
         cast_wrapper.start_app("netflix")
         try:
             netflix = Netflix(

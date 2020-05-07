@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from homeassistant.helpers.dispatcher import dispatcher_send
-from homeassistant.const import SERVICE_TURN_OFF
+from homeassistant.const import SERVICE_TURN_OFF, SERVICE_MEDIA_STOP
 from homeassistant.components.cast.const import SIGNAL_HASS_CAST_APPLICATION
 
 YLE_AREENA_APP_ID = 'A9BCCB7C'
@@ -19,8 +19,13 @@ class ChromecastWrapper():
         self.entity_id = entity.entity_id
 
     def quit(self):
-        self.hass.services.async_call(
+        self.hass.services.call(
             'media_player', SERVICE_TURN_OFF, {"entity_id": self.entity_id}, blocking=True
+        )
+
+    def stop(self):
+        self.hass.services.call(
+            'media_player', SERVICE_MEDIA_STOP, {"entity_id": self.entity_id}, blocking=True
         )
 
     def get_name(self):
