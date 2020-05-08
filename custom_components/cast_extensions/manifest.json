@@ -6,7 +6,7 @@
     "requirements": [
         "pychromecast>=5.0.0",
         "upnpclient",
-        "androidviewclient==20.0.0b3",
+        "androidviewclient==20.0.0b4",
         "yle-dl",
         "BeautifulSoup4"
     ],
