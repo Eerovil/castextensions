@@ -5,9 +5,12 @@ Home Assistant Extensions to cast to Chromecast programmatically using lots of d
 
 # Installation
 
-```
-Download `custom_components/cast_extension` to your `custom_components` directory, and enable the integration in Home Assistant.
-```
+1. Install Cython to your homeassistant virtualenv:
+`source /srv/homeassistant/bin/activate && pip install Cython`
+
+2. Download `custom_components/cast_extension` to your `custom_components` directory, and enable the integration in Home Assistant.
+
+NOTE: The first launch can take up to 20 minutes, because `AndroidViewClient` needs to be built.
 
 # Configuration
 
