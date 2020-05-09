@@ -65,14 +65,7 @@ def quick_play(hass, entity, app_name, data, config):
     _LOGGER.info("Starting quick_play of app %s for chromecast %s",
                  app_name, cast_wrapper.get_name())
 
-    if app_name == 'dlna':
-        app_name = 'media'
-        service_data = {
-            'media_id': find_dlna(data.pop('dlna_server'), data.pop('media_id'),
-                                  index=data.pop('index', None)),
-            'media_type': data.pop('media_type', 'video/mp4'),
-        }
-    elif app_name == 'yleareena':
+    if app_name == 'yleareena':
         program_id = data.pop('media_id')
         index = data.pop('index', None)
         if data.pop('media_type', None) == 'series':
@@ -97,7 +90,18 @@ def quick_play(hass, entity, app_name, data, config):
             'media_id': media_id,
             'is_live': data.pop('is_live', False),
         }
+    # *** Start apps using media_player ***
+    elif app_name == 'dlna':
+        content_type = data.pop('media_type', 'video/mp4')
+        media_url = find_dlna(data.pop('dlna_server'), data.pop('media_id'),
+                              index=data.pop('index', None), content_type=content_type)
+        if not media_url:
+            _LOGGER.error("Media not found")
+            return
+        _LOGGER.info("Playing content %s, %s", media_url, content_type)
+        cast_wrapper.play_media(media_url, content_type)
 
+    # *** End apps using media_player ***
     # *** Start Special apps not using pychromecast ***
     elif app_name == 'netflix':
         cast_wrapper.stop()

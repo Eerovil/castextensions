@@ -3,6 +3,7 @@
 
 from homeassistant.helpers.dispatcher import dispatcher_send
 from homeassistant.const import SERVICE_TURN_OFF, SERVICE_MEDIA_STOP
+from homeassistant.components.media_player.const import SERVICE_PLAY_MEDIA
 from homeassistant.components.cast.const import SIGNAL_HASS_CAST_APPLICATION
 
 YLE_AREENA_APP_ID = 'A9BCCB7C'
@@ -41,6 +42,15 @@ class ChromecastWrapper():
         else:
             raise NotImplementedError()
 
+    def play_media(self, url, content_type="video/mp4"):
+        self.hass.services.call(
+            'media_player', SERVICE_PLAY_MEDIA, {
+                "entity_id": self.entity_id,
+                "media_content_id": url,
+                "media_content_type": content_type
+            }, blocking=True
+        )
+
     def quick_play(self, app_name, app_data):
         app_data["app_name"] = app_name
         dispatcher_send(self.hass, SIGNAL_HASS_CAST_APPLICATION,
@@ -67,6 +77,9 @@ class MockChromecast(ChromecastWrapper):
             print("MockChromecast: start_app {}".format(app))
         else:
             raise NotImplementedError()
+
+    def play_media(self, url, content_type="video/mp4"):
+        print("MockChromecast: play_media {} {}".format(url, content_type))
 
     def quick_play(self, app_name, app_data):
         print("MockChromecast: quick_play {} {}".format(app_name, app_data))

@@ -4,13 +4,18 @@ Home Assistant Extensions to cast to Chromecast programmatically using lots of d
 
 
 # Installation
+1. Download `custom_components/cast_extension` to your `custom_components` directory,.
 
-1. Install Cython to your homeassistant virtualenv:
-`source /srv/homeassistant/bin/activate && pip install Cython`
+2. Install androidviewclient manually without unneccessary dependecies:
+```
+source /srv/homeassistant/bin/activate
+pip install setuptools requests
+pip install androidviewclient==20.0.0b4 --no-dependencies
+```
 
-2. Download `custom_components/cast_extension` to your `custom_components` directory, and enable the integration in Home Assistant.
+3. Add configuration, see below.
 
-NOTE: The first launch can take up to 20 minutes, because `AndroidViewClient` needs to be built.
+4. Restart Home Assistant
 
 # Configuration
 
@@ -50,7 +55,7 @@ media_id must be of the format `https://www.netflix.com/title/{id}`
           "app_name": "netflix",
           "media_id": "https://www.netflix.com/title/60034572"
         }'
-    service: media_player.play_media
+    service: cast_extensions.play_media
 ```
 
 ## Supla
@@ -81,7 +86,7 @@ Optional:
           "media_id": "aamulypsy",
           "title_match": "Koko Shitti"
         }'
-    service: media_player.play_media
+    service: cast_extensions.play_media
 ```
 
 ## DLNA
@@ -110,7 +115,7 @@ Optional:
           "index": "random",
           "dlna_server": "192.168.100.2:1337"
         }'
-    service: media_player.play_media
+    service: cast_extensions.play_media
 ```
 
 ## Yle Areena
@@ -136,5 +141,5 @@ Optional:
           "app_name": "yleareena",
           "media_id": "1-3260345"
         }'
-    service: media_player.play_media
+    service: cast_extensions.play_media
 ```
