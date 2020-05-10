@@ -1,10 +1,10 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
+import json
 
 from homeassistant.helpers.dispatcher import dispatcher_send
 from homeassistant.const import SERVICE_TURN_OFF, SERVICE_MEDIA_STOP
 from homeassistant.components.media_player.const import SERVICE_PLAY_MEDIA
-from homeassistant.components.cast.const import SIGNAL_HASS_CAST_APPLICATION
 
 YLE_AREENA_APP_ID = 'A9BCCB7C'
 NETFLIX_APP_ID = 'CA5E8412'
@@ -34,13 +34,18 @@ class ChromecastWrapper():
 
     def start_app(self, app):
         if app.lower() == 'netflix':
-            dispatcher_send(self.hass, SIGNAL_HASS_CAST_APPLICATION,
-                            self.entity_id, "start_app", {"app_id": NETFLIX_APP_ID})
+            app_id = NETFLIX_APP_ID
         elif app.lower() == 'yleareena':
-            dispatcher_send(self.hass, SIGNAL_HASS_CAST_APPLICATION,
-                            self.entity_id, "start_app", {"app_id": YLE_AREENA_APP_ID})
+            app_id = YLE_AREENA_APP_ID
         else:
             raise NotImplementedError()
+        self.hass.services.call(
+            'media_player', SERVICE_PLAY_MEDIA, {
+                "entity_id": self.entity_id,
+                "media_content_id": json.dumps({"app_id": app_id}),
+                "media_content_type": "cast"
+            }, blocking=True
+        )
 
     def play_media(self, url, content_type="video/mp4"):
         self.hass.services.call(
@@ -53,8 +58,13 @@ class ChromecastWrapper():
 
     def quick_play(self, app_name, app_data):
         app_data["app_name"] = app_name
-        dispatcher_send(self.hass, SIGNAL_HASS_CAST_APPLICATION,
-                        self.entity_id, "quick_play", app_data)
+        self.hass.services.call(
+            'media_player', SERVICE_PLAY_MEDIA, {
+                "entity_id": self.entity_id,
+                "media_content_id": json.dumps(app_data),
+                "media_content_type": "cast"
+            }, blocking=True
+        )
 
 
 class MockChromecast(ChromecastWrapper):
