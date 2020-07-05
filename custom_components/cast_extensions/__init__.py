@@ -16,6 +16,7 @@ from .app_dlna import find_dlna
 from .app_yleareena import YleAreena
 from .app_netflix import Netflix
 from .app_supla import find_supla_program
+from .app_youtubedl import youtubedl_get_media_url
 
 from .util_chromecast import ChromecastWrapper
 
@@ -101,8 +102,13 @@ def quick_play(hass, entity, app_name, data, config):
         _LOGGER.info("Playing content %s, %s", media_url, content_type)
         cast_wrapper.play_media(media_url, content_type)
 
+    elif app_name == 'catt':
+        content_type = data.pop('media_type', 'video/mp4')
+        media_url = youtubedl_get_media_url(content_type, data.pop('media_id'), **data)
+        _LOGGER.info("Playing content %s, %s", media_url, content_type)
+        cast_wrapper.play_media(media_url, content_type)
     # *** End apps using media_player ***
-    # *** Start Special apps not using pychromecast ***
+    # *** Start Special apps which handle chromecast themselves ***
     elif app_name == 'netflix':
         cast_wrapper.stop()
         cast_wrapper.start_app("netflix")
@@ -114,7 +120,7 @@ def quick_play(hass, entity, app_name, data, config):
         except Exception:
             traceback.print_exc()
             cast_wrapper.quit()
-    # *** End Special apps not using pychromecast ***
+    # *** End Special apps which handle chromecast themselves ***
     else:
         raise NotImplementedError()
 
