@@ -102,10 +102,10 @@ def quick_play(hass, entity, app_name, data, config):
         _LOGGER.info("Playing content %s, %s", media_url, content_type)
         cast_wrapper.play_media(media_url, content_type)
 
-    elif app_name == 'catt':
+    elif app_name == 'youtubedl':
         content_type = data.pop('media_type', 'video/mp4')
         media_url = youtubedl_get_media_url(content_type, data.pop('media_id'), **data)
-        _LOGGER.info("Playing content %s, %s", media_url, content_type)
+        _LOGGER.warning("Playing content %s, %s", media_url, content_type)
         cast_wrapper.play_media(media_url, content_type)
     # *** End apps using media_player ***
     # *** Start Special apps which handle chromecast themselves ***
