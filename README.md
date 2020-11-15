@@ -6,14 +6,17 @@ Home Assistant Extensions to cast to Chromecast programmatically using lots of d
 # Installation
 1. Download `custom_components/cast_extension` to your `custom_components` directory,.
 
-2. Install androidviewclient manually without unneccessary dependecies:
+2a. If you need netflix, install androidviewclient manually without unneccessary dependecies:
 ```
-source /srv/homeassistant/bin/activate
-pip install setuptools requests
-pip install androidviewclient==20.0.0b4 --no-dependencies
+/srv/homeassistant/bin/python3 -m pip install setuptools requests
+/srv/homeassistant/bin/python3 -m pip install androidviewclient==20.0.0b4 --no-dependencies
+```
+2b. If you need spotify, install dependencies:
+```
+/srv/homeassistant/bin/python3 -m pip install git+https://github.com/plamere/spotipy.git spotify-token
 ```
 
-3. Add configuration, see below.
+3. Add configuration (If using netflix or areena), see below.
 
 4. Restart Home Assistant
 
