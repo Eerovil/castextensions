@@ -58,6 +58,35 @@ media_id must be of the format `https://www.netflix.com/title/{id}`
     service: cast_extensions.play_media
 ```
 
+## Spotify
+
+You will need to fetch your spotify web player cookies to use this extension. Here is a guide: https://github.com/enriquegh/spotify-webplayer-token
+
+- `app_name`: `spotify`
+- `media_id`: spotify URI
+- `sp_dc`: `sp_dc` cookie
+- `sp_key`: `sp_key` cookie
+
+Example config: 
+
+```yaml
+'cast_spotify_to_my_chromecast':
+  alias: Cast spotify to My Chromecast
+  sequence:
+  - data:
+      entity_id: media_player.my_chromecast
+      media_content_type: cast
+      media_content_id: '
+        {
+          "app_name": "supla",
+          "media_id": "spotify:artist:6TKvvwslcx2bKwiX2aBxbd",
+          "sp_dc": "ifuahweilfuhawleifawef",
+          "sp_key": "ifuwh49gf3wh409q7283rh0q7829awuf7ao9378fhao9w3ufhao9sduh"
+        }'
+    service: cast_extensions.play_media
+```
+
+
 ## Supla
 
 Supla is extended to support programs. Previously only single episodes could be chosen.
