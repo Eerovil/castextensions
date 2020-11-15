@@ -16,6 +16,7 @@ from .app_dlna import find_dlna
 from .app_yleareena import YleAreena
 from .app_netflix import Netflix
 from .app_supla import find_supla_program
+from .app_spotify import get_access_token, play_spotify_media
 
 from .util_chromecast import ChromecastWrapper
 
@@ -90,6 +91,18 @@ def quick_play(hass, entity, app_name, data, config):
             'media_id': media_id,
             'is_live': data.pop('is_live', False),
         }
+    elif app_name == 'spotify':
+        uri = data.pop('media_id')
+
+        access_token, expires = get_access_token(data.pop('sp_dc'), data.pop('sp_key'))
+
+        service_data = {
+            'access_token': access_token,
+            'expires': expires,
+        }
+        cast_wrapper.quick_play(app_name, service_data)
+        play_spotify_media(uri, access_token, entity.original_name)
+        return
     # *** Start apps using media_player ***
     elif app_name == 'dlna':
         content_type = data.pop('media_type', 'video/mp4')
