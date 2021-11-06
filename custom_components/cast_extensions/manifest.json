@@ -11,5 +11,6 @@
         "BeautifulSoup4"
     ],
     "dependencies": ["cast"],
-    "codeowners": ["@Eerovil"]
+    "codeowners": ["@Eerovil"],
+    "version": "1.0.0"
 }
