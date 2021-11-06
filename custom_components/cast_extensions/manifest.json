@@ -8,9 +8,11 @@
         "upnpclient",
         "androidviewclient==20.0.0b4",
         "yle-dl",
-        "BeautifulSoup4"
+        "BeautifulSoup4",
+        "spotify_token"
     ],
     "dependencies": ["cast"],
     "codeowners": ["@Eerovil"],
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "iot_class": "local_polling"
 }
